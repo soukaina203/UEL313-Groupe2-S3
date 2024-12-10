@@ -4,6 +4,7 @@ namespace Watson\Controller;
 
 use Silex\Application;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 
 class HomeController {
 
@@ -66,4 +67,59 @@ class HomeController {
             )
         );
     }
+
+
+
+      /**
+     * Rss .
+     *
+   
+ * @param Request $request Incoming request
+ * @param Application $app Silex application
+ */
+public function getLinks( Application $app)
+{
+ 
+    $links = $app['dao.link']->findAll();
+
+ 
+    $xml = new \SimpleXMLElement('<rss version="2.0"/>');  
+    $channel = $xml->addChild('channel');
+
+    $channel->addChild('title', 'My RSS Feed');
+    $channel->addChild('link', 'http://example.com/rss');
+    $channel->addChild('description', 'Latest links from the database');
+
+ 
+    $atomLink = $channel->addChild('atom:link', null, 'http://www.w3.org/2005/Atom');
+    $atomLink->addAttribute('rel', 'self');
+    $atomLink->addAttribute('href', 'http://example.com/rss');  
+
+    foreach ($links as $link) {
+        $item = $channel->addChild('item');
+
+        // Add basic fields
+        $item->addChild('title', htmlspecialchars($link->getTitle()));
+        $item->addChild('link', htmlspecialchars($link->getUrl()));
+        $item->addChild('description', htmlspecialchars($link->getDesc()));
+
+        $item->addChild('guid', htmlspecialchars($link->getUrl() . '#' . $link->getId()));
+
+        $tags = $link->getTags();
+        if (is_array($tags)) {
+            $tagNames = array_map(function ($tag) {
+                return htmlspecialchars($tag->getTitle());
+            }, $tags); 
+
+            $tagsString = implode(', ', $tagNames); 
+            $item->addChild('category', $tagsString);
+        }
+    }
+
+    return new Response($xml->asXML(), 200, ['Content-Type' => 'application/rss+xml']);
+}
+
+
+
+
 }
