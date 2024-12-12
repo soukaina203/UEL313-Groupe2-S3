@@ -9,22 +9,20 @@
     <strong>Login failed!</strong> {{ error }}
 </div>
 {% endif %}
-<div class="well">
-    <form class="form-signin form-horizontal" role="form" action="{{ path('login_check') }}" method="post">
-        <div class="form-group">
-            <div class="col-sm-6 col-sm-offset-3 col-md-4 col-md-offset-4">
-            <input type="text" name="_username" value="{{ last_username }}" class="form-control" placeholder="Enter your username" required autofocus>
-            </div>
+<div class="card p-4 w-50 d-flex me-auto ms-auto">
+    <form class="needs-validation" novalidate action="{{ path('login_check') }}" method="post">
+        <div class="mb-3">
+            <label for="username" class="form-label">Username</label>
+            <input type="text" id="username" name="_username" value="{{ last_username }}" class="form-control" placeholder="Enter your username" required autofocus>
+            <div class="invalid-feedback">Please enter your username.</div>
         </div>
-        <div class="form-group">
-            <div class="col-sm-6 col-sm-offset-3 col-md-4 col-md-offset-4">
-                <input type="password" name="_password" class="form-control" placeholder="Enter your password" required>
-            </div>
+        <div class="mb-3">
+            <label for="password" class="form-label">Password</label>
+            <input type="password" id="password" name="_password" class="form-control" placeholder="Enter your password" required>
+            <div class="invalid-feedback">Please enter your password.</div>
         </div>
-        <div class="form-group">
-            <div class="col-sm-6 col-sm-offset-3 col-md-4 col-md-offset-4">
-                <button type="submit" class="btn btn-default btn-primary"><span class="glyphicon glyphicon-log-in"></span> Login</button>
-            </div>
+        <div class="d-grid">
+            <button type="submit" class="btn btn-primary"><i class="bi bi-box-arrow-in-right"></i> Login</button>
         </div>
     </form>
 </div>
