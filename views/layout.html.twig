@@ -6,6 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link href="{{ app.request.basepath }}/lib/bootstrap/css/bootstrap.min.css" rel="stylesheet">
     <link href="{{ app.request.basepath }}/css/style.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
     <title>Watson - {% block title %}{% endblock %}</title>
 </head>
 <body>
@@ -29,7 +30,7 @@
                                     <i class="bi bi-person"></i> Welcome, {{ app.user.username }}
                                 </a>
                                 <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">
-                                    <li><a class="dropdown-item" href="{{ path('logout') }}">Log out</a></li>
+                                    <li ><a class="dropdown-item logoutbtn" href="{{ path('logout') }}"><i class="bi bi-box-arrow-left me-2"></i> Log out </a></li>
                                 </ul>
                             </li>
                         {% else %}
@@ -38,7 +39,7 @@
                                     <i class="bi bi-person"></i> Not connected
                                 </a>
                                 <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="guestDropdown">
-                                    <li><a class="dropdown-item" href="{{ path('login') }}">Log in</a></li>
+                                    <li><a class="dropdown-item" href="{{ path('login') }}"><i class="bi bi-box-arrow-in-right me-2"></i>Log in</a></li>
                                 </ul>
                             </li>
                         {% endif %}
@@ -53,9 +54,10 @@
     </div>
 
     <!-- jQuery -->
-    <script src="{{ app.request.basepath }}/lib/jquery/jquery.min.js"></script>
+    <script src="{{ app.request.basepath }}/lib/jquery/jquery-3.7.1.min.js"></script>
     <!-- JavaScript Bootstrap plugin -->
     <script src="{{ app.request.basepath }}/lib/bootstrap/js/bootstrap.bundle.min.js"></script>
+    <script src="{{ app.request.basepath }}/js/script.js"></script>
 </body>
 
 </html>

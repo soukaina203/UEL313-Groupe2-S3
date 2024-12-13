@@ -12,14 +12,14 @@
 <div class="row">
     <div class="col-12 col-md-6 mx-auto">
         <ul class="nav nav-pills nav-fill">
-            <li class="nav-item"><a href="#links" class="nav-link active" data-bs-toggle="pill">Links</a></li>
+            <li class="nav-item navbar-dark"><a href="#links" class="nav-link active" data-bs-toggle="pill">Links</a></li>
             <li class="nav-item"><a href="#users" class="nav-link" data-bs-toggle="pill">Users</a></li>
         </ul>
     </div>
 </div>
 <div class="tab-content">
     <div class="tab-pane fade show active adminTable" id="links">
-        <a href="{{ path('admin_link_add') }}"><button type="button" class="btn btn-primary"><i class="bi bi-plus"></i> Add link</button></a>
+        <a href="{{ path('admin_link_add') }}"><button type="button" class="btn btn-secondary"><i class="bi bi-plus"></i> Add link</button></a>
         {% if links %}
         <div class="table-responsive">
             <table class="table table-hover table-sm">
@@ -28,16 +28,16 @@
                         <th>Title</th>
                         <th>Author</th>
                         <th>Description</th>
-                        <th></th>  <!-- Actions column -->
+                        <th>Actions</th>  <!-- Actions column -->
                     </tr>
                 </thead>
                 {% for link in links %}
                 <tr>
-                    <td><a class="linkTitle" href="{{ path('link', { 'id': link.id }) }}">{{ link.title }}</a></td>
+                    <td><a class="linkTitle text-secondary" href="{{ path('link', { 'id': link.id }) }}">{{ link.title }}</a></td>
                     <td>{{ link.user.username }}</td>
                     <td>{{ link.desc | truncate(60) }}</td>
                     <td>
-                        <a href="{{ path('admin_link_edit', { 'id': link.id }) }}" class="btn btn-info btn-sm" title="Edit"><i class="bi bi-pencil"></i></a>
+                        <a href="{{ path('admin_link_edit', { 'id': link.id }) }}" class="btn btn-info btn-sm" title="Edit"><i class="bi bi-pen text-white"></i></a>
                         <button type="button" class="btn btn-danger btn-sm" title="Delete" data-bs-toggle="modal" data-bs-target="#linkDialog{{ link.id }}"><i class="bi bi-trash"></i></button>
                         <div class="modal fade" id="linkDialog{{ link.id }}" tabindex="-1" aria-labelledby="linkDialogLabel{{ link.id }}" aria-hidden="true">
                             <div class="modal-dialog">
@@ -67,21 +67,21 @@
     </div>
 
     <div class="tab-pane fade adminTable" id="users">
-        <a href="{{ path('admin_user_add') }}"><button type="button" class="btn btn-primary"><i class="bi bi-plus"></i> Add user</button></a>
+        <a href="{{ path('admin_user_add') }}"><button type="button" class="btn btn-secondary"><i class="bi bi-plus"></i> Add user</button></a>
         {% if users %}
         <div class="table-responsive">
             <table class="table table-hover table-sm">
                 <thead>
                     <tr>
                         <th>Name</th>
-                        <th></th>  <!-- Actions column -->
+                        <th>Actions</th>  <!-- Actions column -->
                     </tr>
                 </thead>
                 {% for user in users %}
                 <tr>
                     <td>{{ user.username }}</td>
                     <td>
-                        <a href="{{ path('admin_user_edit', { 'id': user.id }) }}" class="btn btn-info btn-sm" title="Edit"><i class="bi bi-pencil"></i></a>
+                        <a href="{{ path('admin_user_edit', { 'id': user.id }) }}" class="btn btn-info btn-sm" title="Edit"><i class="bi bi-pencil text-white"></i></a>
                         <button type="button" class="btn btn-danger btn-sm" title="Delete" data-bs-toggle="modal" data-bs-target="#userDialog{{ user.id }}"><i class="bi bi-trash"></i></button>
                         <div class="modal fade" id="userDialog{{ user.id }}" tabindex="-1" aria-labelledby="userDialogLabel{{ user.id }}" aria-hidden="true">
                             <div class="modal-dialog">

@@ -5,24 +5,25 @@
 {% block content %}
 	<div class="row">
 		{% for link in links %}
-			<div class="col-md-4">
+			<div class="col-md-4 mt-3 mb-2">
 				<div class="card">
-					<div class="card-header">
+					<div class="card-header fade-in-top bg-dark ">
 						<h2>
-							<a class="linkTitle" href="{{ path('link', { 'id': link.id }) }}">
+							<a class="linkTitle text-white" href="{{ path('link', { 'id': link.id }) }}">
 								{{ link.title }}
 							</a>
 						</h2>
 					</div>
-					<div class="card-body">
+					<div class="card-body fade-in">
 						<p class="card-text">{{ link.desc }}</p>
-						<a href="{{ link.url }}" title="" target="_blank">Open ></a>
-						<em>(by {{ link.user.username }})</em>
+						<a class="btn btn-sm btn-dark" href="{{ link.url }}" title="" target="_blank"><i class="bi bi-globe"></i></a>
+						
 						{% for tag in link.tags %}
-							<a href="{{ path('tag', { 'id': tag.id }) }}" title="Filtrer">
+							<a class="badge text-bg-secondary" href="{{ path('tag', { 'id': tag.id }) }}" title="Filtrer">
 								{{ tag.title }}
 							</a>
 						{% endfor %}
+						<em class="text-body-secondary">(by {{ link.user.username }})</em>
 					</div>
 				</div>
 			</div>

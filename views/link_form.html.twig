@@ -12,12 +12,12 @@
 {% endfor %}
 
 <div class="well">
-{{ form_start(linkForm, { 'attr': {'class': 'form-horizontal'} }) }}
+{{ form_start(linkForm, { 'attr': {'class': 'form-horizontal w-50 d-flex flex-column ms-auto me-auto'} }) }}
     <div class="form-group">
         {{ form_label(linkForm.url, null, { 'label_attr':  {
-            'class': 'col-sm-4 control-label'
+            'class': 'col-sm control-label'
         }}) }}
-        <div class="col-sm-6">
+        <div class="col-sm">
             {{ form_errors(linkForm.url) }}
             {{ form_widget(linkForm.url, { 'attr':  {
                 'class': 'form-control'
@@ -27,9 +27,9 @@
 
     <div class="form-group">
         {{ form_label(linkForm.title, null, { 'label_attr':  {
-            'class': 'col-sm-4 control-label'
+            'class': 'col-sm control-label'
         }}) }}
-        <div class="col-sm-6">
+        <div class="col-sm">
             {{ form_errors(linkForm.title) }}
             {{ form_widget(linkForm.title, { 'attr':  {
                 'class': 'form-control'
@@ -39,9 +39,9 @@
     
     <div class="form-group">
         {{ form_label(linkForm.desc, null, { 'label_attr':  {
-            'class': 'col-sm-4 control-label'
+            'class': 'col-sm control-label'
         }}) }}
-        <div class="col-sm-6">
+        <div class="col-sm">
             {{ form_errors(linkForm.desc) }}
             {{ form_widget(linkForm.desc, { 'attr':  {
                 'class': 'form-control',
@@ -52,9 +52,9 @@
 
     <div class="form-group">
         {{ form_label(linkForm.tags, null, { 'label_attr':  {
-            'class': 'col-sm-4 control-label'
+            'class': 'col-sm control-label'
         }}) }}
-        <div class="col-sm-6">
+        <div class="col-sm">
             {{ form_errors(linkForm.tags) }}
             {{ form_widget(linkForm.tags, { 'attr':  {
                 'class': 'form-control'
@@ -64,8 +64,8 @@
 
 
     <div class="form-group">
-        <div class="col-sm-offset-4 col-sm-3">
-            <input type="submit" class="btn btn-primary" value="Save" />
+        <div class="d-flex justify-content-center me-auto ms-auto mt-4">
+            <input type="submit" class="btn btn-success" value="Save" />
         </div>
     </div>
 {{ form_end(linkForm) }}
