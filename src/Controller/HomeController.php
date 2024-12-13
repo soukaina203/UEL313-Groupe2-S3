@@ -77,49 +77,77 @@ class HomeController {
  * @param Request $request Incoming request
  * @param Application $app Silex application
  */
-public function getLinks( Application $app)
+
+ 
+/* How to test this RSS system
+npm install -g localtunnel
+lt --port the local port of my app 
+it gives you a temporary public link to your local app
+you type the link in your browser 
+a page is shown where you have to enter the password provided in the same page just click on a link "https://loca.lt/mytunnelpassword"
+enter the password 
+then the watson app get displayed 
+go to the rss route , the xml document containing 15 last links being published 
+
+FOR TESTING
+ we used FEED Validator  https://www.feedvalidator.org/
+ we pass the public link of our app there and then we got if our feed is validated or not 
+*/
+
+public function getLinks(Application $app)
 {
- 
-    $links = $app['dao.link']->findAll();
+    // Retrieve the last 15 links from the database
+    $links = $app['dao.link']->getLast15Links();
 
- 
-    $xml = new \SimpleXMLElement('<rss version="2.0"/>');  
+    // Create the root RSS XML element
+    $xml = new \SimpleXMLElement('<rss version="2.0"/>');
+
+    // Add the <channel> element to the RSS feed
     $channel = $xml->addChild('channel');
+    $channel->addChild('title', 'My RSS Feed'); // Set the title of the RSS feed
+    $channel->addChild('link', 'http://chubby-ideas-suffer.loca.lt/rss'); // Correct the link to the RSS feed
+    $channel->addChild('description', 'Last 15 published links on Watson'); // Set the description of the RSS feed
 
-    $channel->addChild('title', 'My RSS Feed');
-    $channel->addChild('link', 'http://example.com/rss');
-    $channel->addChild('description', 'Latest links from the database');
-
- 
+    // Add Atom link metadata for self-referencing the feed
     $atomLink = $channel->addChild('atom:link', null, 'http://www.w3.org/2005/Atom');
-    $atomLink->addAttribute('rel', 'self');
-    $atomLink->addAttribute('href', 'http://example.com/rss');  
+    $atomLink->addAttribute('rel', 'self'); // Define the link relation as self
+    $atomLink->addAttribute('href', 'http://chubby-ideas-suffer.loca.lt/rss'); // Correct the feed URL to match the actual location
 
+    // Loop through the retrieved links and add them to the RSS feed
     foreach ($links as $link) {
+        // Create an <item> element for each link
         $item = $channel->addChild('item');
 
-        // Add basic fields
+        // Add the title of the link
         $item->addChild('title', htmlspecialchars($link->getTitle()));
+        // Add the URL of the link
         $item->addChild('link', htmlspecialchars($link->getUrl()));
+        // Add the description of the link
         $item->addChild('description', htmlspecialchars($link->getDesc()));
-
+        // Add a globally unique identifier (GUID) for the link
         $item->addChild('guid', htmlspecialchars($link->getUrl() . '#' . $link->getId()));
 
+        // If the link has associated tags, add them as <category> elements
         $tags = $link->getTags();
         if (is_array($tags)) {
-            $tagNames = array_map(function ($tag) {
-                return htmlspecialchars($tag->getTitle());
-            }, $tags); 
-
-            $tagsString = implode(', ', $tagNames); 
-            $item->addChild('category', $tagsString);
+            // Extract tag titles and encode them to prevent XML injection
+            $tagNames = array_map(fn($tag) => htmlspecialchars($tag->getTitle()), $tags);
+            // Combine tags into a comma-separated string and add as a <category> element
+            $item->addChild('category', implode(', ', $tagNames));
         }
     }
 
-    return new Response($xml->asXML(), 200, ['Content-Type' => 'application/rss+xml']);
+    // Create a new DOMDocument for better formatting of the RSS XML
+    $dom = new \DOMDocument('1.0', 'UTF-8');
+    $dom->preserveWhiteSpace = false; // Remove unnecessary whitespace
+    $dom->formatOutput = true; // Enable pretty-printing for easier readability
+
+    // Import the SimpleXMLElement into the DOMDocument
+    $importedNode = $dom->importNode(dom_import_simplexml($xml), true);
+    $dom->appendChild($importedNode); // Append the imported node to the DOMDocument
+
+    // Return the formatted XML as a response with the correct content type
+    return new Response($dom->saveXML(), 200, ['Content-Type' => 'application/rss+xml']);
 }
-
-
-
 
 }

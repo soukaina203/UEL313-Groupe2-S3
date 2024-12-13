@@ -23,6 +23,7 @@ class LinkDAO extends DAO
     public function setTagDAO($tagDAO) {
         $this->tagDAO = $tagDAO;
     }
+    
 
     /**
      * Return a list of all links, sorted by date (most recent first).
@@ -45,6 +46,21 @@ class LinkDAO extends DAO
         }
         return $_links;
     }
+
+    public function getLast15Links(): array {
+        $sql = "SELECT * FROM tl_liens ORDER BY lien_id DESC LIMIT 15;"; // Table correcte
+        $result = $this->getDb()->fetchAll($sql);
+    
+        // Convertir chaque ligne de résultat en objet `Link`
+        $links = [];
+        foreach ($result as $row) {
+            $links[] = $this->buildDomainObject($row);
+        }
+    
+        return $links;
+    }
+    
+    
 
     /**
      * Returns a link matching the supplied id.
