@@ -6,20 +6,23 @@
 	<div class="row">
 		{% for link in links %}
 			<div class="col-md-4 mt-3 mb-2">
-				<div class="card">
-					<div class="card-header fade-in-top bg-dark ">
+				<div class="card link-card">
+					<div class="card-header fade-in-top bg-white">
 						<h2>
-							<a class="linkTitle text-white" href="{{ path('link', { 'id': link.id }) }}">
+							<a class="linkTitle text-dark" href="{{ path('link', { 'id': link.id }) }}">
 								{{ link.title }}
 							</a>
 						</h2>
 					</div>
+					
 					<div class="card-body fade-in">
 						<p class="card-text">{{ link.desc }}</p>
-						<a class="btn btn-sm btn-dark" href="{{ link.url }}" title="" target="_blank"><i class="bi bi-globe"></i></a>
+					</div>
+					<div class="card-footer shadow fade-in">
+					<a class="btn btn-sm link-url" href="{{ link.url }}" title="" target="_blank"><i class="bi bi-globe"></i></a>
 						
 						{% for tag in link.tags %}
-							<a class="badge text-bg-secondary" href="{{ path('tag', { 'id': tag.id }) }}" title="Filtrer">
+							<a class="btn btn-sm link-tag" href="{{ path('tag', { 'id': tag.id }) }}" title="Filtrer">
 								{{ tag.title }}
 							</a>
 						{% endfor %}
