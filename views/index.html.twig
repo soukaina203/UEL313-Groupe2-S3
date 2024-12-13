@@ -16,7 +16,7 @@
 					</div>
 					
 					<div class="card-body fade-in">
-						<p class="card-text">{{ link.desc }}</p>
+						<p class="card-text">{{ link.desc | truncate(110) }}</p>
 					</div>
 					<div class="card-footer shadow fade-in">
 					<a class="btn btn-sm link-url" href="{{ link.url }}" title="" target="_blank"><i class="bi bi-globe"></i></a>
