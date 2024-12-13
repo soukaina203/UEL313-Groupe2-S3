@@ -78,10 +78,10 @@ class HomeController {
  * @param Application $app Silex application
  */
 
- 
+
 /* How to test this RSS system
 npm install -g localtunnel
-lt --port the local port of my app 
+dans le terminal lt --port the local port of my app 
 it gives you a temporary public link to your local app
 you type the link in your browser 
 a page is shown where you have to enter the password provided in the same page just click on a link "https://loca.lt/mytunnelpassword"

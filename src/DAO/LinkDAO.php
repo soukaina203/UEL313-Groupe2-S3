@@ -46,20 +46,24 @@ class LinkDAO extends DAO
         }
         return $_links;
     }
-
     public function getLast15Links(): array {
-        $sql = "SELECT * FROM tl_liens ORDER BY lien_id DESC LIMIT 15;"; // Table correcte
+        // Définir la requête SQL pour récupérer les 15 derniers liens, triés par ID en ordre décroissant
+        $sql = "SELECT * FROM tl_liens ORDER BY lien_id DESC LIMIT 15;"; 
+        
+        // Exécuter la requête SQL et récupérer tous les résultats sous forme de tableau associatif
         $result = $this->getDb()->fetchAll($sql);
     
-        // Convertir chaque ligne de résultat en objet `Link`
+        // Initialiser un tableau vide pour stocker les objets `Link`
         $links = [];
+        
+        // Parcourir chaque ligne de résultat et convertir en objet `Link` à l'aide de la méthode `buildDomainObject`
         foreach ($result as $row) {
             $links[] = $this->buildDomainObject($row);
         }
     
+        // Retourner le tableau d'objets `Link` contenant les 15 derniers liens
         return $links;
     }
-    
     
 
     /**
