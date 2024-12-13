@@ -32,7 +32,7 @@
                         <th></th>  <!-- Actions column -->
                     </tr>
                 </thead>
-                {% for link in links %}
+                {% for link in links.links %}
                 <tr>
                     <td><a class="linkTitle" href="{{ path('link', { 'id': link.id }) }}">{{ link.title }}</a></td>
                     <td>{{ link.user.username }}</td>
@@ -63,8 +63,24 @@
                 {% endfor %}
             </table>
         </div>
+        <div class="pagination text-center">
+            {% if page > 1 %}
+                <a href="{{ path('admin', { 'page': page - 1 }) }}" class="btn btn-default">Previous</a>
+            {% endif %}
+
+            {% for i in 1..totalPages %}
+                <a href="{{ path('admin', { 'page': i }) }}" class="btn btn-default {% if i == page %}active{% endif %}">
+                    {{ i }}
+                </a>
+            {% endfor %}
+
+            {% if page < totalPages %}
+                <a href="{{ path('admin', { 'page': page + 1 }) }}" class="btn btn-default">Next</a>
+            {% endif %}
+        </div>
         {% else %}
         <div class="alert alert-warning">No links found.</div>
+
         {% endif %}
     </div>
 

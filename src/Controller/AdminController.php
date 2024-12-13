@@ -17,13 +17,48 @@ class AdminController {
      *
      * @param Application $app Silex application
      */
-    public function indexAction(Application $app) {
+
+    /*public function indexAction(Application $app) {
         $links = $app['dao.link']->findAll();
         $users = $app['dao.user']->findAll();
         return $app['twig']->render('admin.html.twig', array(
             'links' => $links,
             'users' => $users));
+    }*/
+    
+    public function indexAction(Request $request, Application $app) {
+        
+        $limit = 15; // Nombre maximum de liens par page
+        $page = max(1, (int) $request->query->get('page', 1)); // Page actuelle, par défaut 1
+        $offset = ($page - 1) * $limit;
+        
+        // Récupérer les liens avec pagination
+        $links = $app['dao.link']->findPaginated($limit, $offset);
+        
+        // Compter le nombre total de liens pour la pagination
+        
+        $totalLinks = $app['dao.link']->count();
+        $totalPages = (int) ceil($totalLinks / $limit);
+        
+        $users = $app['dao.user']->findAll();
+        
+
+        $data = array(
+            'links' => $links,
+            'users' => $users,
+            'page' => $page,
+            'totalPages' => $totalPages
+        );
+        
+        
+        return $app['twig']->render('admin.html.twig', array(
+            'links' => $links,
+            'users' => $users,
+            'page' => $page,
+            'totalPages' => $totalPages));
+            
     }
+    
 
     /**
      * Add link controller.
