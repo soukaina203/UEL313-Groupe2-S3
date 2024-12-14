@@ -100,6 +100,17 @@ body {
   color: #fff;
 }
 
+.submitBtn {
+  background-color:#014751 ;
+  color: white;
+}
+
+.submitBtn:hover {
+  background-color:#fff ;
+  color: #014751;
+  border: #014751 2px solid;
+}
+
 .link-card {
   transition: transform 0.3s ease, box-shadow 0.3s ease;
   height: 13rem;
