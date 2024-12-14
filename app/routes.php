@@ -35,4 +35,4 @@ $app->get('/admin/user/{id}/delete', "Watson\Controller\AdminController::deleteU
 
 
 // Rss route
-$app->get('/rss', 'Watson\Controller\HomeController::getLinks');
+$app->get('/rss', 'Watson\Controller\HomeController::getLinks')->bind('rss_feed_route');;

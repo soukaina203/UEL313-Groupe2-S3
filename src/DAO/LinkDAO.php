@@ -16,21 +16,24 @@ class LinkDAO extends DAO
      */
     private $tagDAO;
 
-    public function setUserDAO($userDAO) {
+    public function setUserDAO($userDAO)
+    {
         $this->userDAO = $userDAO;
     }
 
-    public function setTagDAO($tagDAO) {
+    public function setTagDAO($tagDAO)
+    {
         $this->tagDAO = $tagDAO;
     }
-    
+
 
     /**
      * Return a list of all links, sorted by date (most recent first).
      *
      * @return array A list of all links.
      */
-    public function findAll() {
+    public function findAll()
+    {
         $sql = "
             SELECT * 
             FROM tl_liens 
@@ -46,25 +49,28 @@ class LinkDAO extends DAO
         }
         return $_links;
     }
-    public function getLast15Links(): array {
-        // Définir la requête SQL pour récupérer les 15 derniers liens, triés par ID en ordre décroissant
-        $sql = "SELECT * FROM tl_liens ORDER BY lien_id DESC LIMIT 15;"; 
-        
-        // Exécuter la requête SQL et récupérer tous les résultats sous forme de tableau associatif
+
+
+    public function getLast15Links(): array
+    {
+        // Define the SQL query to fetch the last 15 links, sorted by ID in descending order
+        $sql = "SELECT * FROM tl_liens ORDER BY lien_id DESC LIMIT 15;";
+
+        // Execute the SQL query and fetch all results as an associative array
         $result = $this->getDb()->fetchAll($sql);
-    
-        // Initialiser un tableau vide pour stocker les objets `Link`
+
+        // Initialize an empty array to store the `Link` objects
         $links = [];
-        
-        // Parcourir chaque ligne de résultat et convertir en objet `Link` à l'aide de la méthode `buildDomainObject`
+
+        // Loop through each result row and convert it into a `Link` object using the `buildDomainObject` method
         foreach ($result as $row) {
             $links[] = $this->buildDomainObject($row);
         }
-    
-        // Retourner le tableau d'objets `Link` contenant les 15 derniers liens
+
+        // Return the array of `Link` objects containing the last 15 links
         return $links;
     }
-    
+
 
     /**
      * Returns a link matching the supplied id.
@@ -73,7 +79,8 @@ class LinkDAO extends DAO
      *
      * @return \Watson\Domain\Link|throws an exception if no matching link is found.
      */
-    public function find($id) {
+    public function find($id)
+    {
         $sql = "
             SELECT * 
             FROM tl_liens 
@@ -81,9 +88,9 @@ class LinkDAO extends DAO
         ";
         $row = $this->getDb()->fetchAssoc($sql, array($id));
 
-        if ($row){
+        if ($row) {
             return $this->buildDomainObject($row);
-        }else{
+        } else {
             throw new \Exception("No link matching id " . $id);
         }
     }
@@ -95,7 +102,8 @@ class LinkDAO extends DAO
      *
      * @return A list of all links.
      */
-    public function findAllByTag($id) {
+    public function findAllByTag($id)
+    {
         $sql = "
             SELECT tl_liens.*
             FROM tl_liens
@@ -119,7 +127,8 @@ class LinkDAO extends DAO
      *
      * @param \Watson\Domain\Link $link The link to save
      */
-    public function save(Link $link) {
+    public function save(Link $link)
+    {
         $linkData = array(
             'lien_titre' => $link->getTitle(),
             'lien_url'   => $link->getUrl(),
@@ -145,7 +154,8 @@ class LinkDAO extends DAO
      *
      * @param integer $id The link id.
      */
-    public function delete($id) {
+    public function delete($id)
+    {
         // Delete the link
         $this->getDb()->delete('tl_liens', array('lien_id' => $id));
     }
@@ -156,7 +166,8 @@ class LinkDAO extends DAO
      * @param array $row The DB row containing Link data.
      * @return array $_tag With Objects of \Watson\Domain\Link
      */
-    protected function buildDomainObject($row) {
+    protected function buildDomainObject($row)
+    {
         $link = new Link();
         $link->setId($row['lien_id']);
         $link->setTitle($row['lien_titre']);
@@ -182,7 +193,8 @@ class LinkDAO extends DAO
      *
      * @param integer $userId The id of the user
      */
-    public function deleteAllByUser($userId) {
+    public function deleteAllByUser($userId)
+    {
         $this->getDb()->delete('tl_liens', array('user_id' => $userId));
     }
 }
