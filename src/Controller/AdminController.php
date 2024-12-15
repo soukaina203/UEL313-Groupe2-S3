@@ -18,44 +18,55 @@ class AdminController {
      * @param Application $app Silex application
      */
 
-    /*public function indexAction(Application $app) {
-        $links = $app['dao.link']->findAll();
-        $users = $app['dao.user']->findAll();
-        return $app['twig']->render('admin.html.twig', array(
-            'links' => $links,
-            'users' => $users));
-    }*/
+    
     
     public function indexAction(Request $request, Application $app) {
         
-        $limit = 15; // Nombre maximum de liens par page
-        $page = max(1, (int) $request->query->get('page', 1)); // Page actuelle, par défaut 1
-        $offset = ($page - 1) * $limit;
+        $limit = 15; 
+        $pageUsers = max(1, (int) $request->query->get('pageUsers', 1));
+        $pageLinks = max(1, (int) $request->query->get('pageLinks', 1));
+        $offsetUsers = ($pageUsers - 1) * $limit;
+        $offsetLinks = ($pageLinks - 1) * $limit;
         
-        // Récupérer les liens avec pagination
-        $links = $app['dao.link']->findPaginated($limit, $offset);
+       
+        $links = $app['dao.link']->findPaginated($limit, $offsetLinks);
+        $users = $app['dao.user']->findPaginated($limit, $offsetUsers);
+        $tab = $request->query->get('tab', 'links');
         
-        // Compter le nombre total de liens pour la pagination
+        if ($tab === 'links') {
+            $pageUsers = 1;  
+        } elseif ($tab === 'users') {
+            $pageLinks = 1;  
+        }
+        
+        
         
         $totalLinks = $app['dao.link']->count();
-        $totalPages = (int) ceil($totalLinks / $limit);
+        $totalLinksPages = (int) ceil($totalLinks / $limit);
         
-        $users = $app['dao.user']->findAll();
+        $totalUsers = $app['dao.user']->count();
+        $totalUsersPages = (int) ceil($totalUsers / $limit);
         
 
         $data = array(
             'links' => $links,
             'users' => $users,
-            'page' => $page,
-            'totalPages' => $totalPages
+            'pageUsers' => $pageUsers,
+            'pageLinks' => $pageLinks,
+            'totalLinksPages' => $totalLinksPages,
+            'totalUsersPages' => $totalUsersPages,
+            'tab' => $tab
         );
         
         
         return $app['twig']->render('admin.html.twig', array(
             'links' => $links,
             'users' => $users,
-            'page' => $page,
-            'totalPages' => $totalPages));
+            'pageUsers' => $pageUsers,
+            'pageLinks' => $pageLinks,
+            'totalLinksPages' => $totalLinksPages,
+            'totalUsersPages' => $totalUsersPages,
+            'tab' => $tab));
             
     }
     
