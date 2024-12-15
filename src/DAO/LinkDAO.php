@@ -50,7 +50,6 @@ class LinkDAO extends DAO
         return $_links;
     }
 
-<<<<<<< HEAD
 
     public function getLast15Links(): array
     {
@@ -72,7 +71,6 @@ class LinkDAO extends DAO
         return $links;
     }
 
-=======
     public function findPaginated($limit, $offset) {
         
         $totalLinks = $this->count();
@@ -98,9 +96,9 @@ class LinkDAO extends DAO
             die();
         }
         
-        
         if (empty($result)) {
-            dd("Aucun résultat trouvé.");
+            error_log("Aucun résultat trouvé.");
+            die("Aucun résultat trouvé.");
         }
     
    
@@ -127,7 +125,6 @@ class LinkDAO extends DAO
         return (int) $result['total'];
     }
     
->>>>>>> Pagination_CL
 
     /**
      * Returns a link matching the supplied id.
