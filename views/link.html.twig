@@ -6,11 +6,11 @@
 <p>
     <h2>{{ link.title }}</h2>
     <p>{{ link.desc }}</p>
-    <a href="{{ link.url }}" title="" target="_blank">Open ></a>
-    <em>(by {{ link.user.username }})</em>
+    <a class="btn btn-lg btn-dark" href="{{ link.url }}" title="" target="_blank">Open the website <i class="bi bi-globe ms-2"></i></a>
+    <em class="text-body-secondary">(by {{ link.user.username }})</em>
 
     {% for tag in link.tags %}
-    	<a href="{{ path('tag', { 'id': tag.id }) }}" title="Filtrer">
+    	<a class="badge text-bg-secondary" href="{{ path('tag', { 'id': tag.id }) }}" title="Filtrer">
     		{{ tag.title }}
     	</a>
     {% endfor %}
