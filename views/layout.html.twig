@@ -18,7 +18,8 @@
                     <span class="navbar-toggler-icon"></span>
                 </button>
                 <div class="collapse navbar-collapse" id="navbar-collapse-target">
-                    <ul class="navbar-nav ms-auto">
+                <a class=" ms-auto me-2" href="{{ path('rss_feed_route') }}"><i class="bi bi-rss-fill text-secondary"></i></a>
+                    <ul class="navbar-nav ">
                         {% if app.user and is_granted('ROLE_ADMIN') %}
                             <li class="nav-item {% if adminMenu is defined %}active{% endif %}">
                                 <a class="nav-link" href="{{ path('admin') }}"><i class="bi bi-gear"></i> Administration</a>
