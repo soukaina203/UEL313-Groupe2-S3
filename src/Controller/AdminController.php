@@ -17,13 +17,59 @@ class AdminController {
      *
      * @param Application $app Silex application
      */
-    public function indexAction(Application $app) {
-        $links = $app['dao.link']->findAll();
-        $users = $app['dao.user']->findAll();
+
+    
+    
+    public function indexAction(Request $request, Application $app) {
+        
+        $limit = 15; 
+        $pageUsers = max(1, (int) $request->query->get('pageUsers', 1));
+        $pageLinks = max(1, (int) $request->query->get('pageLinks', 1));
+        $offsetUsers = ($pageUsers - 1) * $limit;
+        $offsetLinks = ($pageLinks - 1) * $limit;
+        
+       
+        $links = $app['dao.link']->findPaginated($limit, $offsetLinks);
+        $users = $app['dao.user']->findPaginated($limit, $offsetUsers);
+        $tab = $request->query->get('tab', 'links');
+        
+        if ($tab === 'links') {
+            $pageUsers = 1;  
+        } elseif ($tab === 'users') {
+            $pageLinks = 1;  
+        }
+        
+        
+        
+        $totalLinks = $app['dao.link']->count();
+        $totalLinksPages = (int) ceil($totalLinks / $limit);
+        
+        $totalUsers = $app['dao.user']->count();
+        $totalUsersPages = (int) ceil($totalUsers / $limit);
+        
+
+        $data = array(
+            'links' => $links,
+            'users' => $users,
+            'pageUsers' => $pageUsers,
+            'pageLinks' => $pageLinks,
+            'totalLinksPages' => $totalLinksPages,
+            'totalUsersPages' => $totalUsersPages,
+            'tab' => $tab
+        );
+        
+        
         return $app['twig']->render('admin.html.twig', array(
             'links' => $links,
-            'users' => $users));
+            'users' => $users,
+            'pageUsers' => $pageUsers,
+            'pageLinks' => $pageLinks,
+            'totalLinksPages' => $totalLinksPages,
+            'totalUsersPages' => $totalUsersPages,
+            'tab' => $tab));
+            
     }
+    
 
     /**
      * Add link controller.

@@ -63,6 +63,58 @@ class UserDAO extends DAO implements UserProviderInterface
         return $_users;
     }
 
+    public function count() {
+        $sql = "SELECT COUNT(*) AS total FROM tl_users";
+        $result = $this->getDb()->fetchAssoc($sql);
+        return (int) $result['total'];
+    }
+
+    public function findPaginated($limit, $offset) {
+        
+        $totalUsers = $this->count();
+    
+        
+        $totalUsersPages = (int) ceil($totalUsers / $limit);
+    
+        $currentUsersPage = ($offset / $limit) + 1;
+    
+     
+        $sql = "
+            SELECT * 
+            FROM tl_users 
+            ORDER BY usr_id DESC 
+            LIMIT $limit OFFSET $offset
+        ";
+    
+        try {
+            $result = $this->getDb()->fetchAll($sql);
+        } catch (\Exception $e) {
+            echo "Erreur : " . $e->getMessage() . "<br>";
+            echo "Trace : " . $e->getTraceAsString();
+            die();
+        }
+        
+        
+        if (empty($result)) {
+            dd("Aucun résultat trouvé.");
+        }
+    
+   
+        $users = [];
+        foreach ($result as $row) {
+            $users[] = $this->buildDomainObject($row);
+        }
+    
+        
+        
+        return [
+            'users' => $users,
+            'currentUsersPage' => $currentUsersPage,
+            'totalUsersPages' => $totalUsersPages,
+            'totalUsers' => $totalUsers,
+        ];
+    }
+
     /**
      * Returns a user matching the supplied id.
      *

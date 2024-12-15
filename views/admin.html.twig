@@ -10,16 +10,29 @@
 </div>
 {% endfor %}
 <div class="row">
+<<<<<<< HEAD
     <div class="col-12 col-md-6 mx-auto">
         <ul class="nav nav-pills nav-fill">
             <li class="nav-item navbar-dark"><a href="#links" class="nav-link active" data-bs-toggle="pill">Links</a></li>
             <li class="nav-item"><a href="#users" class="nav-link" data-bs-toggle="pill">Users</a></li>
+=======
+    <div class="col-sm-8 col-sm-offset-2 col-md-6 col-md-offset-3">
+        <ul class="nav nav-tabs nav-justified">
+            <li class="{{ tab == 'links' ? 'active' : '' }}"><a href="#links" data-toggle="tab">Links</a></li>
+            <li class="{{ tab == 'users' ? 'active' : '' }}"><a href="#users" data-toggle="tab">Users</a></li>
+>>>>>>> Pagination_CL
         </ul>
     </div>
 </div>
 <div class="tab-content">
+<<<<<<< HEAD
     <div class="tab-pane fade show active adminTable" id="links">
         <a href="{{ path('admin_link_add') }}"><button type="button" class="btn btn-secondary"><i class="bi bi-plus"></i> Add link</button></a>
+=======
+
+     <div class="tab-pane fade in {{ tab == 'links' ? 'active' : '' }}" id="links">
+        <a href="{{ path('admin_link_add') }}"><button type="button" class="btn btn-primary"><span class="glyphicon glyphicon-plus"></span> Add link</button></a>
+>>>>>>> Pagination_CL
         {% if links %}
         <div class="table-responsive card mt-3">
             <table class="table table-hover table-sm">
@@ -31,7 +44,7 @@
                         <th>Actions</th>  <!-- Actions column -->
                     </tr>
                 </thead>
-                {% for link in links %}
+                {% for link in links.links %}
                 <tr>
                     <td><a class="linkTitle text-secondary" href="{{ path('link', { 'id': link.id }) }}">{{ link.title }}</a></td>
                     <td>{{ link.user.username }}</td>
@@ -65,13 +78,31 @@
                 {% endfor %}
             </table>
         </div>
+        <div class="pagination text-center">
+    {% if pageLinks > 1 %}
+        <a href="{{ path('admin', { 'pageLinks': pageLinks - 1, 'tab': 'links' }) }}" class="btn btn-default">Previous</a>
+    {% endif %}
+
+    {% for i in 1..totalLinksPages %}
+        <a href="{{ path('admin', { 'pageLinks': i, 'tab': 'links' }) }}" class="btn btn-default {% if i == pageLinks %}active{% endif %}">
+            {{ i }}
+        </a>
+    {% endfor %}
+
+    {% if pageLinks < totalLinksPages %}
+        <a href="{{ path('admin', { 'pageLinks': pageLinks + 1, 'tab': 'links' }) }}" class="btn btn-default">Next</a>
+    {% endif %}
+</div>
+
+
         {% else %}
         <div class="alert alert-warning">No links found.</div>
+
         {% endif %}
     </div>
 
-    <div class="tab-pane fade adminTable" id="users">
-        <a href="{{ path('admin_user_add') }}"><button type="button" class="btn btn-secondary"><i class="bi bi-plus"></i> Add user</button></a>
+     <div class="tab-pane fade in {{ tab == 'users' ? 'active' : '' }}" id="users">
+        <a href="{{ path('admin_user_add') }}"><button type="button" class="btn btn-primary"><span class="glyphicon glyphicon-plus"></span> Add user</button></a>
         {% if users %}
         <div class="table-responsive">
             <table class="table table-hover table-sm">
@@ -81,7 +112,7 @@
                         <th>Actions</th>  <!-- Actions column -->
                     </tr>
                 </thead>
-                {% for user in users %}
+                {% for user in users.users %}
                 <tr>
                     <td>{{ user.username }}</td>
                     <td>
@@ -109,9 +140,80 @@
                 {% endfor %}
             </table>
         </div>
+        <div class="pagination text-center">
+    {% if pageUsers > 1 %}
+        <a href="{{ path('admin', { 'pageUsers': pageUsers - 1, 'tab': 'users' }) }}" class="btn btn-default">Previous</a>
+    {% endif %}
+
+    {% for i in 1..totalUsersPages %}
+        <a href="{{ path('admin', { 'pageUsers': i, 'tab': 'users' }) }}" class="btn btn-default {% if i == pageUsers %}active{% endif %}">
+            {{ i }}
+        </a>
+    {% endfor %}
+
+    {% if pageUsers < totalUsersPages %}
+        <a href="{{ path('admin', { 'pageUsers': pageUsers + 1, 'tab': 'users' }) }}" class="btn btn-default">Next</a>
+    {% endif %}
+</div>
+
+
+
         {% else %}
         <div class="alert alert-warning">No users found.</div>
         {% endif %}
     </div>
 </div>
+{% block javascripts %}
+    {{ parent() }}
+    <script>
+        
+        const urlParams = new URLSearchParams(window.location.search);
+        const tab = urlParams.get('tab');
+
+        
+        function activateTab(tabId) {
+           
+            const allTabs = document.querySelectorAll('.nav-tabs li');
+            allTabs.forEach(function(tab) {
+                tab.classList.remove('active');
+            });
+
+            
+            const allPanes = document.querySelectorAll('.tab-pane');
+            allPanes.forEach(function(pane) {
+                pane.classList.remove('in', 'active');
+            });
+
+           
+            const activeTab = document.querySelector('a[href="#' + tabId + '"]');
+            if (activeTab) {
+                activeTab.parentElement.classList.add('active');
+            }
+            const activePane = document.querySelector('#' + tabId);
+            if (activePane) {
+                activePane.classList.add('in', 'active');
+            }
+        }
+
+        
+        if (tab === 'users') {
+            activateTab('users');
+        } else if (tab === 'links') {
+            activateTab('links');
+        }
+
+        
+        const tabLinks = document.querySelectorAll('.nav-tabs a');
+        tabLinks.forEach(function(tabLink) {
+            tabLink.addEventListener('click', function(e) {
+                const newTab = tabLink.getAttribute('href').substring(1); // On récupère "users" ou "links" à partir de l'attribut href="#users"
+                const currentUrl = new URL(window.location.href);
+                currentUrl.searchParams.set('tab', newTab); // On modifie le paramètre 'tab' dans l'URL
+                window.history.pushState({}, '', currentUrl); // Met à jour l'URL sans recharger la page
+            });
+        });
+    </script>
+{% endblock %}
+
+
 {% endblock %}

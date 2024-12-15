@@ -50,6 +50,7 @@ class LinkDAO extends DAO
         return $_links;
     }
 
+<<<<<<< HEAD
 
     public function getLast15Links(): array
     {
@@ -71,6 +72,62 @@ class LinkDAO extends DAO
         return $links;
     }
 
+=======
+    public function findPaginated($limit, $offset) {
+        
+        $totalLinks = $this->count();
+    
+        
+        $totalLinksPages = (int) ceil($totalLinks / $limit);
+    
+        $currentPage = ($offset / $limit) + 1;
+    
+     
+        $sql = "
+            SELECT * 
+            FROM tl_liens 
+            ORDER BY lien_id DESC 
+            LIMIT $limit OFFSET $offset
+        ";
+    
+        try {
+            $result = $this->getDb()->fetchAll($sql);
+        } catch (\Exception $e) {
+            echo "Erreur : " . $e->getMessage() . "<br>";
+            echo "Trace : " . $e->getTraceAsString();
+            die();
+        }
+        
+        
+        if (empty($result)) {
+            dd("Aucun résultat trouvé.");
+        }
+    
+   
+        $links = [];
+        foreach ($result as $row) {
+            $links[] = $this->buildDomainObject($row);
+        }
+    
+        
+        
+        return [
+            'links' => $links,
+            'currentPage' => $currentPage,
+            'totalLinksPages' => $totalLinksPages,
+            'totalLinks' => $totalLinks,
+        ];
+    }
+    
+
+    
+    public function count() {
+        $sql = "SELECT COUNT(*) AS total FROM tl_liens";
+        $result = $this->getDb()->fetchAssoc($sql);
+        return (int) $result['total'];
+    }
+    
+>>>>>>> Pagination_CL
 
     /**
      * Returns a link matching the supplied id.
@@ -184,7 +241,6 @@ class LinkDAO extends DAO
         $linkId = $row['lien_id'];
         $_tag   = $this->tagDAO->find($linkId);
         $link->setTags($_tag);
-
         return $link;
     }
 
